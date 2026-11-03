@@ -1,0 +1,132 @@
+.model small
+.stack 100h
+.data
+
+A DB 1,2
+  DB 3,4
+
+B DB 5,6
+  DB 7,8
+
+C DW 4 DUP(?)
+
+MSG DB 13,10,'Result Matrix:',13,10,'$'
+
+.code
+main PROC
+
+    mov ax,@data
+    mov ds,ax
+
+    ; C[0][0] = A[0][0]*B[0][0] + A[0][1]*B[1][0]
+    mov al,A
+    mov bl,B
+    mul bl
+    mov dx,ax
+
+    mov al,A+1
+    mov bl,B+2
+    mul bl
+    add ax,dx
+    mov C,ax
+
+    ; C[0][1] = A[0][0]*B[0][1] + A[0][1]*B[1][1]
+    mov al,A
+    mov bl,B+1
+    mul bl
+    mov dx,ax
+
+    mov al,A+1
+    mov bl,B+3
+    mul bl
+    add ax,dx
+    mov C+2,ax
+
+    ; C[1][0] = A[1][0]*B[0][0] + A[1][1]*B[1][0]
+    mov al,A+2
+    mov bl,B
+    mul bl
+    mov dx,ax
+
+    mov al,A+3
+    mov bl,B+2
+    mul bl
+    add ax,dx
+    mov C+4,ax
+
+    ; C[1][1] = A[1][0]*B[0][1] + A[1][1]*B[1][1]
+    mov al,A+2
+    mov bl,B+1
+    mul bl
+    mov dx,ax
+
+    mov al,A+3
+    mov bl,B+3
+    mul bl
+    add ax,dx
+    mov C+6,ax
+
+    ; Display message
+    mov dx,offset MSG
+    mov ah,09H
+    int 21H
+
+    ; Display C[0][0]
+    mov ax,C
+    call DISPLAY
+
+    mov dl,' '
+    mov ah,02H
+    int 21H
+
+    ; Display C[0][1]
+    mov ax,C+2
+    call DISPLAY
+
+    mov dl,13
+    mov ah,02H
+    int 21H
+    mov dl,10
+    int 21H
+
+    ; Display C[1][0]
+    mov ax,C+4
+    call DISPLAY
+
+    mov dl,' '
+    mov ah,02H
+    int 21H
+
+    ; Display C[1][1]
+    mov ax,C+6
+    call DISPLAY
+
+main ENDP
+
+
+; Display decimal number in AX
+DISPLAY PROC
+
+    mov bx,10
+    mov cx,0
+
+NEXT_DIGIT:
+    mov dx,0
+    div bx
+    push dx
+    inc cx
+    cmp ax,0
+    jne NEXT_DIGIT
+
+PRINT_DIGIT:
+    pop dx
+    add dl,'0'
+    mov ah,02H
+    int 21H
+    loop PRINT_DIGIT
+
+    ret
+
+DISPLAY ENDP
+
+end main

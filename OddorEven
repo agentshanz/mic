@@ -1,0 +1,30 @@
+.model small
+.stack 100h
+
+.data
+NUMBER  DB 25H        ; Input number
+RESULT  DB ?          ; 00 = Even, 01 = Odd
+
+.code
+main PROC
+
+    mov ax, @data
+    mov ds, ax
+
+    mov al, NUMBER
+
+    and al, 01H       ; Check LSB
+
+    jz EVEN           ; If Zero Flag = 1, number is even
+
+ODD:
+    mov RESULT, 01H
+    jmp EXIT
+
+EVEN:
+    mov RESULT, 00H
+
+EXIT:
+     mov bl, RESULT
+main ENDP
+end main

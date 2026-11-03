@@ -1,0 +1,19 @@
+.model small
+.stack 100h
+
+.data
+.code
+main proc
+
+    mov ax, @data
+    mov ds, ax
+
+    mov ax, [4000h]      ; Load first number
+    add ax, [4002h]      ; Add second number
+
+    mov [4004h], ax      ; Store result
+
+   
+
+main endp
+end main

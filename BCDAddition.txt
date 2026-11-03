@@ -1,0 +1,52 @@
+.model small
+.stack 100h
+
+.data
+NUM1 DB 25H
+NUM2 DB 37H
+RESULT DB ?
+
+MSG DB 13,10,'BCD Addition Result = $'
+.code
+main PROC
+    mov ax,@data
+    mov ds,ax
+
+    ; Load first BCD number
+    mov al,NUM1
+
+    ; Add second BCD number
+    add al,NUM2
+
+    ; Decimal Adjust after Addition
+    daa
+
+    ; Store result
+    mov RESULT,al
+
+    ; Display message
+    mov dx,offset MSG
+    mov ah,09H
+    int 21H
+
+    ; Display tens digit
+    mov al,RESULT
+    mov ah,00H
+    mov bl,10H
+    div bl
+
+    add al,'0'
+    mov dl,al
+    mov ah,02H
+    int 21H
+
+    ; Display units digit
+    mov al,RESULT
+    and al,0FH
+    add al,'0'
+    mov dl,al
+    mov ah,02H
+    int 21H
+
+main ENDP
+end main

@@ -1,0 +1,44 @@
+.model small
+.stack 100h
+
+.data
+BIN DB 11010110B
+
+.code
+main PROC
+
+    mov ax, @data
+    mov ds, ax
+
+    mov al, BIN
+    mov ah, 0
+
+    mov bl, 10
+    mov cx, 0
+
+CONVERT:
+    mov ah, 0
+    div bl              ; AX / 10
+                        ; AL = quotient
+                        ; AH = remainder
+
+    push ax             ; Save remainder
+    inc cx
+
+    cmp al, 0
+    jne CONVERT
+
+DISPLAY:
+    pop ax
+    mov dl, ah
+    add dl, '0'
+
+    mov ah, 02H
+    int 21H
+
+    loop DISPLAY
+
+    
+
+main ENDP
+end main

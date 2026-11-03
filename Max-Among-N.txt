@@ -1,0 +1,36 @@
+.model small
+.stack 100h
+
+.data
+N       EQU 8
+
+ARRAY   DB 45H, 22H, 91H, 38H, 7AH, 56H, 19H, 60H
+MAX     DB ?
+
+.code
+main PROC
+
+    mov ax, @data
+    mov ds, ax
+
+    lea si, ARRAY
+
+    mov al, [si]        ; Assume first element is maximum
+    inc si
+
+    mov cx, N-1
+
+NEXT:
+    cmp al, [si]
+    jae SKIP            ; If AL >= current element, skip update
+
+    mov al, [si]        ; Update maximum
+
+SKIP:
+    inc si
+    loop NEXT
+
+    mov MAX, al         ; Store maximum value
+
+main ENDP
+end main

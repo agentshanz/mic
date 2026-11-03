@@ -1,0 +1,20 @@
+.model small
+.stack 100h
+
+.data
+.code
+main proc
+
+    mov ax, @data
+    mov ds, ax
+
+    mov si, 4000h
+
+    mov ax, [si]        ; First number
+    add ax, [si+2]      ; Add second number
+
+    mov [si+4], ax      ; Store result at 4004H
+
+   
+main endp
+end main

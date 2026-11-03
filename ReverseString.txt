@@ -1,0 +1,29 @@
+model small
+.stack 100h
+
+.data
+STR DB 'HELLO'
+
+.code
+main PROC
+
+    mov ax, @data
+    mov ds, ax
+
+    lea si, STR
+    add si, 4          ; Point to last character
+
+    mov cx, 5          ; Number of characters
+
+BACK:
+    mov dl, [si]       ; Get character
+    mov ah, 02H        ; Display character
+    int 21H
+
+    dec si             ; Move to previous character
+    loop BACK
+
+    
+
+main ENDP
+end main

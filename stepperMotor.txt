@@ -1,0 +1,35 @@
+org 100h
+#start=stepper_motor.exe#
+
+mov dx, 07h          ; Port address for motor
+mov cx, 4            ; Number of steps in sequence
+lea si, steps        ; Load address of step sequence (CW)
+
+rotate:
+    mov al, [si]     ; Get step pattern from table
+    out dx, al       ; Send to port
+    call delay       ; Wait for visible rotation
+    inc si           ; Next step
+    loop rotate      ; Repeat 4 steps
+
+jmp start            ; Continuous rotation
+
+start:
+    mov cx, 4
+    lea si, steps        ; For clockwise rotation
+    ; lea si, stepsanti  ; For anticlockwise
+    jmp rotate
+
+; Step sequence definitions
+stepsanti db 09h,0Ch,06h,03h    ; Anticlockwise
+steps     db 03h,06h,0Ch,09h    ; Clockwise
+
+; -------------------
+; Delay subroutine
+; -------------------
+delay proc
+    mov bx, 000Ah
+d1: dec bx
+    jnz d1
+    ret
+delay endp

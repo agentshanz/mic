@@ -1,0 +1,40 @@
+.model small
+.stack 100h
+
+.data
+NUM DB 5
+FACT_RES DW ?
+
+.code
+main PROC
+
+    mov ax, @data
+    mov ds, ax
+
+    mov al, NUM
+    call FACT
+
+    mov FACT_RES, ax
+
+
+main ENDP
+
+FACT PROC
+
+    cmp al,1
+    je LAST
+
+    push ax
+    dec al
+    call FACT
+    pop bx
+    mul bl
+    ret
+
+LAST:
+    mov ax,1
+    ret
+
+FACT ENDP
+
+end main
